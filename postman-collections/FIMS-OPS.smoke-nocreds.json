@@ -1,0 +1,222 @@
+{
+	"variables": [],
+	"info": {
+		"name": "FIMS-OPSsmoke",
+		"_postman_id": "c6862a10-4747-8bac-e73f-4133a7010937",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "FIMS-OPS version api",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"//tests[\"build id should be inserted\"] = !(responseBody.has(\"BUILD\"));"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{prodUrl}}/fims/api",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "8fbd89ea-9408-4231-9ee1-d17713c68fa0",
+					"name": "/api OPS",
+					"originalRequest": {
+						"url": "{{prodUrl}}/fims/api",
+						"method": "GET",
+						"header": [],
+						"body": {}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate",
+							"name": "Cache-Control",
+							"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Aug 2017 20:43:31 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Expires",
+							"value": "0",
+							"name": "Expires",
+							"description": "Gives the date/time after which the response is considered stale"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache",
+							"name": "Pragma",
+							"description": "Implementation-specific headers that may have various effects anywhere along the request-response chain."
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked",
+							"name": "Transfer-Encoding",
+							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+						},
+						{
+							"key": "X-Application-Context",
+							"value": "application:8101",
+							"name": "X-Application-Context",
+							"description": "Custom header"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff",
+							"name": "X-Content-Type-Options",
+							"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY",
+							"name": "X-Frame-Options",
+							"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block",
+							"name": "X-XSS-Protection",
+							"description": "Cross-site scripting (XSS) filter"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Thu Jan 14 2038 08:14:07 GMT-0800 (PST)",
+							"httpOnly": true,
+							"domain": "localhost",
+							"path": "/fimsAuthServer",
+							"secure": false,
+							"value": "3C5FCE528969BCB9568F1DD65094D50C",
+							"key": "JSESSIONID"
+						}
+					],
+					"responseTime": 201,
+					"body": "{\"title\":\"UTM Research Platform, FIMS-USS Interface\",\"version\":\"17.08\",\"build_time\":\"2017-08-24 20:42:57\",\"api_documentation\":\"https://app.swaggerhub.com/api/utm/fims/v1\"}"
+				}
+			]
+		},
+		{
+			"name": "authURL FIMS-OPS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Body contains Token\"] = data.token_type === 'bearer'",
+							"postman.setEnvironmentVariable(\"token\", data.access_token);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "ussname",
+						"password": "",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{authUrl}}/fimsAuthServer/oauth/token?grant_type=client_credentials",
+					"host": [
+						"{{authUrl}}"
+					],
+					"path": [
+						"fimsAuthServer",
+						"oauth",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic dXNzTmFzYTo3YjYzZDQ1M2IzYTI0NDY5YWZiMDk3MGJkMjdmYzYzMg==",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FIMS-OPS manage endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//  UTM-2552 disabled until this Jira is fixed",
+							"//tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "ussname",
+						"password": "",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{prodUrl}}/fims/manage/env",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic dXNzTmFzYTo3YjYzZDQ1M2IzYTI0NDY5YWZiMDk3MGJkMjdmYzYzMg==",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
